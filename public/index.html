@@ -10,29 +10,69 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f5;
-            color: #0f1419;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 25%, #ff69b4 50%, #ffb6c1 75%, #ffc0cb 100%);
+            background-attachment: fixed;
+            color: #fff;
             min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 105, 180, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 20, 147, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '💕 💖 💗 💓 💝 💘 💞 💟 💕 💖 💗 💓 💝 💘 💞 💟';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 2.5rem;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatHearts 30s linear infinite;
+            white-space: pre-wrap;
+            overflow: hidden;
+        }
+
+        @keyframes floatHearts {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
         }
 
         /* ── Layout ─────────────────────────────────── */
         .timeline {
             max-width: 600px;
             margin: 0 auto;
-            background: #fff;
+            background: rgba(255, 192, 203, 0.95);
+            backdrop-filter: blur(10px);
             min-height: 100vh;
-            border-left: 1px solid #eff3f4;
-            border-right: 1px solid #eff3f4;
+            border-left: 3px solid #ff69b4;
+            border-right: 3px solid #ff1493;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.4);
         }
 
         /* ── Header ─────────────────────────────────── */
         .top-bar {
             position: sticky;
             top: 0;
-            background: rgba(255,255,255,0.85);
+            background: rgba(255, 182, 193, 0.9);
             backdrop-filter: blur(12px);
             z-index: 50;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 2px solid #ff69b4;
         }
         .top-bar-inner {
             padding: 12px 16px;
@@ -43,22 +83,658 @@
         }
         .top-bar .subtitle {
             font-size: 0.8em;
-            color: #536472;
+            color: #8b0000;
             font-weight: 400;
+        }
+
+        /* Search Bar Styles */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            margin-right: 12px;
+        }
+
+        #nameLookup {
+            padding: 6px 10px;
+            border: 1px solid #ff69b4;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #8b0000;
+            font-size: 0.75em;
+            outline: none;
+            transition: all 0.15s;
+            font-family: inherit;
+            width: 180px;
+        }
+
+        #nameLookup:focus {
+            border-color: #ff1493;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        #nameLookup::placeholder {
+            color: #ff69b4;
+        }
+
+        .search-btn {
+            padding: 6px 8px;
+            background: rgba(255, 105, 180, 0.3);
+            color: #8b0000;
+            border: 1px solid #ff69b4;
+            border-radius: 16px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .search-btn:hover {
+            background: rgba(255, 105, 180, 0.5);
+            border-color: #ff1493;
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 4px 8px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .dark-mode-toggle:hover {
+            background: rgba(255, 105, 180, 0.2);
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a0a0a 0%, #2d0a0a 25%, #1a0a0a 50%, #330a0a 75%, #1a0a0a 100%);
+            color: #ffb6c1;
+        }
+
+        body.dark-mode::before {
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 105, 180, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 20, 147, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 182, 193, 0.1) 0%, transparent 50%);
+        }
+
+        body.dark-mode .timeline {
+            background: rgba(20, 20, 30, 0.95);
+            border-left: 3px solid #ff1493;
+            border-right: 3px solid #ff69b4;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.2);
+        }
+
+        body.dark-mode .top-bar {
+            background: rgba(20, 20, 30, 0.9);
+            border-bottom: 2px solid #ff1493;
+        }
+
+        body.dark-mode .top-bar .subtitle {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .compose textarea {
+            color: #ffb6c1;
+            background: rgba(30, 30, 40, 0.8);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+        }
+
+        body.dark-mode .compose textarea::placeholder {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .mood-chip {
+            background: rgba(255, 105, 180, 0.15);
+            border-color: #ff69b4;
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .mood-chip:hover {
+            background: rgba(255, 105, 180, 0.3);
+        }
+
+        body.dark-mode .post-text {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .post-handle,
+        body.dark-mode .post-dot,
+        body.dark-mode .post-time {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .reply-text {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .reply-handle,
+        body.dark-mode .reply-time {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .reply-compose input {
+            color: #ffb6c1;
+            background: rgba(30, 30, 40, 0.8);
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .reply-compose input::placeholder {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .char-text {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .action {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .emoji-btn {
+            background: rgba(255, 105, 180, 0.15);
+            border-color: #ff69b4;
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .image-upload-btn,
+        body.dark-mode .reply-image-btn {
+            background: rgba(255, 105, 180, 0.2);
+            color: #ffb6c1;
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .image-upload-btn:hover,
+        body.dark-mode .reply-image-btn:hover {
+            background: rgba(255, 105, 180, 0.3);
+            border-color: #ff1493;
+        }
+
+        body.dark-mode .empty {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .empty b {
+            color: #ff1493;
+        }
+
+        body.dark-mode #nameLookup {
+            background: rgba(30, 30, 40, 0.8);
+            color: #ffb6c1;
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode #nameLookup:focus {
+            background: rgba(30, 30, 40, 0.95);
+            border-color: #ff1493;
+        }
+
+        body.dark-mode #nameLookup::placeholder {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .search-btn {
+            background: rgba(255, 105, 180, 0.2);
+            color: #ffb6c1;
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .search-btn:hover {
+            background: rgba(255, 105, 180, 0.3);
+            border-color: #ff1493;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 192, 203, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 3px solid #ff69b4;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #ff69b4;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #ff69b4;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: #8b0000;
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            margin: 4px 0 0 0;
+            font-size: 0.9em;
+            color: #ff69b4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: inherit;
+            font-size: 0.9em;
+            color: #8b0000;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255, 105, 180, 0.2);
+        }
+
+        .sidebar-icon {
+            font-size: 1.2em;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: #ff69b4;
+            margin: 10px 20px;
+        }
+
+        .logout-btn {
+            color: #ff1493;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 20, 147, 0.2);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 105, 180, 0.9);
+            border: 2px solid #ff69b4;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.15s;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 105, 180, 1);
+            transform: scale(1.05);
+        }
+
+        .sidebar.open + .sidebar-toggle {
+            left: 300px;
+        }
+
+        /* Dark Mode Sidebar Styles */
+        body.dark-mode .sidebar {
+            background: rgba(20, 20, 30, 0.95);
+            border-right-color: #ff1493;
+        }
+
+        body.dark-mode .profile-info h3 {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .profile-info p {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .sidebar-item {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .sidebar-item:hover {
+            background: rgba(255, 105, 180, 0.15);
+        }
+
+        body.dark-mode .sidebar-divider {
+            background: #ff1493;
+        }
+
+        body.dark-mode .sidebar-toggle {
+            background: rgba(255, 105, 180, 0.8);
+            border-color: #ff1493;
+        }
+
+        /* Report Button Styles */
+        .report-container {
+            position: relative;
+            display: inline-block;
+            margin-left: auto;
+        }
+
+        .report-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 12px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .report-btn:hover {
+            background: rgba(255, 105, 180, 0.1);
+            transform: scale(1.1);
+        }
+
+        .report-icon {
+            font-size: 0.9em;
+            opacity: 0.7;
+            transition: opacity 0.15s;
+        }
+
+        .report-btn:hover .report-icon {
+            opacity: 1;
+        }
+
+        .reply-report-btn {
+            margin-top: 4px;
+            padding: 2px 4px;
+            font-size: 0.8em;
+        }
+
+        /* Report Tooltip Styles */
+        .report-tooltip {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            transform: translateY(-10px);
+            margin-top: 5px;
+        }
+
+        .report-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .report-tooltip-content {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #ff69b4;
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 200px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .report-tooltip-content h4 {
+            margin: 0 0 10px 0;
+            color: #8b0000;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .report-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .report-options button {
+            background: rgba(255, 105, 180, 0.1);
+            border: 1px solid #ff69b4;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            font-size: 0.85em;
+            color: #8b0000;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-options button:hover {
+            background: rgba(255, 105, 180, 0.2);
+            border-color: #ff1493;
+            transform: translateY(-1px);
+        }
+
+        .report-custom-section {
+            border-top: 1px solid #ff69b4;
+            padding-top: 12px;
+            margin-top: 8px;
+        }
+
+        .report-custom-section textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #ff69b4;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #8b0000;
+            font-family: inherit;
+            font-size: 0.85em;
+            resize: vertical;
+            outline: none;
+            transition: all 0.15s;
+        }
+
+        .report-custom-section textarea:focus {
+            border-color: #ff1493;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .report-custom-section textarea::placeholder {
+            color: #ff69b4;
+            font-style: italic;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+
+        .report-cancel-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: #8b0000;
+            border: 1px solid #ff69b4;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .report-cancel-btn:hover {
+            background: rgba(255, 105, 180, 0.1);
+            border-color: #ff1493;
+        }
+
+        .report-submit-btn {
+            background: #ff69b4;
+            color: #fff;
+            border: 1px solid #ff1493;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .report-submit-btn:hover {
+            background: #ff1493;
+            border-color: #e0146d;
+            transform: translateY(-1px);
+        }
+
+        .report-submit-btn:disabled {
+            background: #ccc;
+            border-color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Dark Mode Enhanced Report Styles */
+        body.dark-mode .report-custom-section {
+            border-color: #ff1493;
+        }
+
+        body.dark-mode .report-custom-section textarea {
+            background: rgba(30, 30, 40, 0.9);
+            color: #ffb6c1;
+            border-color: #ff1493;
+        }
+
+        body.dark-mode .report-custom-section textarea:focus {
+            background: rgba(30, 30, 40, 0.95);
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .report-custom-section textarea::placeholder {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .report-cancel-btn {
+            background: rgba(30, 30, 40, 0.8);
+            color: #ffb6c1;
+            border-color: #ff1493;
+        }
+
+        body.dark-mode .report-cancel-btn:hover {
+            background: rgba(255, 105, 180, 0.1);
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .report-submit-btn {
+            background: #ff1493;
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .report-submit-btn:hover {
+            background: #ff69b4;
+            border-color: #e0146d;
+        }
+
+        /* Dark Mode Report Styles */
+        body.dark-mode .report-tooltip-content {
+            background: rgba(20, 20, 30, 0.95);
+            border-color: #ff1493;
+        }
+
+        body.dark-mode .report-tooltip-content h4 {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .report-options button {
+            background: rgba(255, 105, 180, 0.1);
+            border-color: #ff1493;
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .report-options button:hover {
+            background: rgba(255, 105, 180, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                left: -250px;
+            }
+            
+            .sidebar.open + .sidebar-toggle {
+                left: 270px;
+            }
+            
+            .sidebar-header {
+                padding: 15px;
+            }
+            
+            .profile-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .sidebar-toggle {
+                top: 15px;
+                left: 15px;
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
         }
 
         /* Tabs */
         .tabs {
             display: flex;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 2px solid #ff1493;
         }
         .tab {
             flex: 1;
             text-align: center;
-            padding: 14px 0;
-            font-size: 0.9em;
+            padding: 10px 4px;
+            font-size: 0.75em;
             font-weight: 500;
-            color: #536471;
+            color: #fff;
             cursor: pointer;
             position: relative;
             transition: background 0.2s;
@@ -66,8 +742,8 @@
             background: none;
             font-family: inherit;
         }
-        .tab:hover { background: #f7f7f7; }
-        .tab.active { color: #0f1419; font-weight: 700; }
+        .tab:hover { background: rgba(255, 105, 180, 0.3); }
+        .tab.active { color: #fff; font-weight: 700; }
         .tab.active::after {
             content: '';
             position: absolute;
@@ -76,14 +752,14 @@
             transform: translateX(-50%);
             width: 56px;
             height: 4px;
-            background: #e0446d;
+            background: #ff69b4;
             border-radius: 2px;
         }
 
         /* ── Compose ────────────────────────────────── */
         .compose {
             padding: 12px 16px;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 2px solid #ff1493;
             display: flex;
             gap: 12px;
         }
@@ -110,10 +786,13 @@
             font-size: 1.15em;
             resize: none;
             min-height: 52px;
-            color: #0f1419;
+            color: #8b0000;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 8px;
             line-height: 1.4;
         }
-        .compose textarea::placeholder { color: #9aa3ad; }
+        .compose textarea::placeholder { color: #ff69b4; }
 
         .compose-moods {
             display: flex;
@@ -124,14 +803,14 @@
         .mood-chip {
             padding: 3px 10px;
             border-radius: 14px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ff69b4;
             font-size: 0.78em;
             cursor: pointer;
             transition: all 0.15s;
-            background: #fff;
-            color: #536471;
+            background: rgba(255, 105, 180, 0.2);
+            color: #8b0000;
         }
-        .mood-chip:hover { background: #f7f7f7; }
+        .mood-chip:hover { background: rgba(255, 105, 180, 0.4); }
         .mood-chip.selected {
             background: #fde8ee;
             border-color: #e0446d;
@@ -143,9 +822,70 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 10px;
-            border-top: 1px solid #eff3f4;
+            border-top: 1px solid #ff69b4;
         }
         .compose-left { display: flex; align-items: center; gap: 12px; }
+
+        /* Image Upload Styles */
+        .image-upload-btn {
+            padding: 6px 12px;
+            background: rgba(255, 105, 180, 0.3);
+            color: #8b0000;
+            border: 1px solid #ff69b4;
+            border-radius: 16px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .image-upload-btn:hover { 
+            background: rgba(255, 105, 180, 0.5);
+            border-color: #ff1493;
+        }
+
+        .image-preview-container {
+            margin: 8px 0;
+        }
+
+        .image-preview {
+            position: relative;
+            display: inline-block;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #ff69b4;
+            max-width: 200px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .remove-image-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 20, 147, 0.9);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .remove-image-btn:hover {
+            background: rgba(255, 20, 147, 1);
+            transform: scale(1.1);
+        }
 
         /* Circular char counter */
         .char-ring {
@@ -158,7 +898,7 @@
             fill: none;
             stroke-width: 2.5;
         }
-        .char-ring .bg { stroke: #eff3f4; }
+        .char-ring .bg { stroke: #ff69b4; }
         .char-ring .fill { stroke: #e0446d; transition: stroke-dashoffset 0.2s, stroke 0.2s; }
         .char-ring .fill.warn { stroke: #ffc107; }
         .char-ring .fill.limit { stroke: #f44336; }
@@ -168,7 +908,7 @@
             left: 50%;
             transform: translate(-50%,-50%);
             font-size: 0.55em;
-            color: #536471;
+            color: #8b0000;
             font-weight: 600;
         }
 
@@ -192,11 +932,11 @@
             display: flex;
             gap: 12px;
             padding: 12px 16px;
-            border-bottom: 1px solid #eff3f4;
+            border-bottom: 1px solid #ff69b4;
             transition: background 0.15s;
             animation: fadeIn 0.3s ease;
         }
-        .post:hover { background: #f8f8f8; }
+        .post:hover { background: rgba(255, 105, 180, 0.1); }
 
         .post-body { flex: 1; min-width: 0; }
 
@@ -211,15 +951,15 @@
             font-size: 0.92em;
         }
         .post-handle {
-            color: #536471;
+            color: #8b0000;
             font-size: 0.85em;
         }
         .post-dot {
-            color: #536471;
+            color: #8b0000;
             font-size: 0.7em;
         }
         .post-time {
-            color: #536471;
+            color: #8b0000;
             font-size: 0.85em;
         }
 
@@ -243,6 +983,23 @@
             line-height: 1.55;
             word-wrap: break-word;
             white-space: pre-wrap;
+            color: #8b0000;
+        }
+
+        .post-image {
+            margin: 8px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #ff69b4;
+            max-width: 100%;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            display: block;
         }
 
         /* Emoji reactions row (below text) */
@@ -256,8 +1013,8 @@
             width: 32px;
             height: 28px;
             border-radius: 14px;
-            border: 1px solid #eff3f4;
-            background: #fff;
+            border: 1px solid #ff69b4;
+            background: rgba(255, 105, 180, 0.2);
             cursor: pointer;
             font-size: 0.85em;
             display: flex;
@@ -265,7 +1022,7 @@
             justify-content: center;
             gap: 2px;
             transition: all 0.15s;
-            color: #536471;
+            color: #8b0000;
         }
         .emoji-btn:hover { background: #fde8ee; border-color: #e0446d; transform: scale(1.1); }
         .emoji-btn.reacted { background: #fde8ee; border-color: #e0446d; }
@@ -291,15 +1048,15 @@
             background: none;
             cursor: pointer;
             font-size: 0.82em;
-            color: #536471;
+            color: #8b0000;
             transition: all 0.15s;
             font-family: inherit;
         }
         .action svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-        .action:hover.reply-action { color: #1d9bf0; background: rgba(29,155,240,0.1); }
-        .action:hover.repost-action { color: #00ba7c; background: rgba(0,186,124,0.1); }
-        .action:hover.like-action { color: #f91880; background: rgba(249,24,128,0.1); }
-        .action:hover.bookmark-action { color: #1d9bf0; background: rgba(29,155,240,0.1); }
+        .action:hover.reply-action { color: #ff69b4; background: rgba(255, 105, 180, 0.2); }
+        .action:hover.repost-action { color: #ff1493; background: rgba(255, 20, 147, 0.2); }
+        .action:hover.like-action { color: #ff1493; background: rgba(255, 20, 147, 0.2); }
+        .action:hover.bookmark-action { color: #ff69b4; background: rgba(255, 105, 180, 0.2); }
         .action.liked { color: #f91880; }
         .action.liked svg { fill: #f91880; stroke: #f91880; }
         .action.reposted { color: #00ba7c; }
@@ -318,7 +1075,7 @@
             display: flex;
             gap: 10px;
             padding: 10px 0 10px 52px;
-            border-top: 1px solid #eff3f4;
+            border-top: 1px solid #ff69b4;
         }
         .reply-avatar {
             width: 28px;
@@ -335,29 +1092,106 @@
         }
         .reply-body { flex: 1; min-width: 0; }
         .reply-name { font-weight: 600; font-size: 0.82em; }
-        .reply-handle { color: #536471; font-size: 0.78em; }
-        .reply-text { font-size: 0.88em; line-height: 1.45; margin-top: 2px; }
-        .reply-time { font-size: 0.72em; color: #536471; margin-top: 2px; }
+        .reply-handle { color: #8b0000; font-size: 0.78em; }
+        .reply-text { font-size: 0.88em; line-height: 1.45; margin-top: 2px; color: #8b0000; }
+        .reply-time { font-size: 0.72em; color: #8b0000; margin-top: 2px; }
+        
+        .reply-image {
+            margin: 4px 0;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #ff69b4;
+            max-width: 200px;
+        }
+
+        .reply-image img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+            display: block;
+        }
 
         .reply-compose {
             display: flex;
             gap: 10px;
             padding: 10px 0 4px 52px;
-            border-top: 1px solid #eff3f4;
+            border-top: 1px solid #ff69b4;
             align-items: center;
         }
         .reply-compose input {
             flex: 1;
-            border: 1px solid #eff3f4;
+            border: 1px solid #ff69b4;
             border-radius: 20px;
             padding: 8px 14px;
             font-size: 0.85em;
             outline: none;
             font-family: inherit;
-            color: #0f1419;
+            color: #8b0000;
+            background: rgba(255, 255, 255, 0.8);
         }
         .reply-compose input:focus { border-color: #e0446d; }
-        .reply-compose input::placeholder { color: #9aa3ad; }
+        .reply-compose input::placeholder { color: #ff69b4; }
+        
+        .reply-image-btn {
+            padding: 6px 8px;
+            background: rgba(255, 105, 180, 0.3);
+            color: #8b0000;
+            border: 1px solid #ff69b4;
+            border-radius: 16px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .reply-image-btn:hover { 
+            background: rgba(255, 105, 180, 0.5);
+            border-color: #ff1493;
+        }
+
+        .reply-image-preview-container {
+            margin: 8px 0 8px 52px;
+        }
+
+        .reply-image-preview {
+            position: relative;
+            display: inline-block;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ff69b4;
+            max-width: 150px;
+        }
+
+        .reply-image-preview img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .remove-reply-image-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 20, 147, 0.9);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .remove-reply-image-btn:hover {
+            background: rgba(255, 20, 147, 1);
+            transform: scale(1.1);
+        }
         .reply-compose button {
             padding: 6px 16px;
             background: #e0446d;
@@ -375,11 +1209,11 @@
         .empty {
             text-align: center;
             padding: 80px 20px;
-            color: #9aa3ad;
+            color: #8b0000;
         }
         .empty .icon { font-size: 2.5em; margin-bottom: 10px; }
         .empty p { font-size: 0.92em; }
-        .empty b { color: #0f1419; }
+        .empty b { color: #ff1493; }
 
         /* ── Toast ──────────────────────────────────── */
         .toast {
@@ -407,15 +1241,69 @@
 </head>
 <body>
 
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="profile-avatar" id="profileAvatar">
+            <img src="https://picsum.photos/seed/default/100/100.jpg" alt="Profile" id="profilePicImg">
+        </div>
+        <div class="profile-info">
+            <h3 id="profileName">Anonymous User</h3>
+            <p id="profileHandle">@anon_user</p>
+        </div>
+    </div>
+    
+    <div class="sidebar-menu">
+        <button class="sidebar-item" onclick="editProfile()">
+            <span class="sidebar-icon">✏️</span>
+            <span>Edit Profile</span>
+        </button>
+        <button class="sidebar-item" onclick="changeProfilePicture()">
+            <span class="sidebar-icon">📷</span>
+            <span>Change Profile Picture</span>
+        </button>
+        <button class="sidebar-item" onclick="viewMyPosts()">
+            <span class="sidebar-icon">📝</span>
+            <span>My Posts</span>
+        </button>
+        <button class="sidebar-item" onclick="viewSettings()">
+            <span class="sidebar-icon">⚙️</span>
+            <span>Settings</span>
+        </button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-item logout-btn" onclick="logout()">
+            <span class="sidebar-icon">🚪</span>
+            <span>Log Out</span>
+        </button>
+    </div>
+</div>
+
+<!-- Sidebar Toggle Button -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" id="sidebarToggle">
+    <span>☰</span>
+</button>
+
 <div class="timeline">
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="top-bar-inner">
             <h1>Campus Confessions <span class="subtitle" id="count"></span></h1>
+            <div class="search-container">
+                <input type="number" id="nameLookup" placeholder="Enter post ID to find name" min="1" onkeypress="handleNameLookupEnter(event)">
+                <button onclick="lookupName()" class="search-btn">🔍</button>
+            </div>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
+                <span class="dark-mode-icon">🌙</span>
+                <span class="light-mode-icon" style="display: none;">☀️</span>
+            </button>
         </div>
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('recent', this)">For You</button>
-            <button class="tab" onclick="switchTab('top', this)">Trending</button>
+            <button class="tab active" onclick="switchTab('new', this)">🆕 New</button>
+            <button class="tab" onclick="switchTab('rising', this)">📈 Rising</button>
+            <button class="tab" onclick="switchTab('controversial', this)">⚡ Controversial</button>
+            <button class="tab" onclick="switchTab('top', this)">🔥 Top</button>
+            <button class="tab" onclick="switchTab('best', this)">⭐ Best</button>
+            <button class="tab" onclick="switchTab('hot', this)">🌋 Hot</button>
         </div>
     </div>
 
@@ -432,8 +1320,18 @@
                 <span class="mood-chip" data-mood="anxious" onclick="pickMood(this)">&#128560; anxious</span>
                 <span class="mood-chip" data-mood="excited" onclick="pickMood(this)">&#128293; excited</span>
             </div>
+            <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+                <div class="image-preview">
+                    <img id="previewImage" src="" alt="Preview">
+                    <button type="button" class="remove-image-btn" onclick="removeImage()">✕</button>
+                </div>
+            </div>
             <div class="compose-footer">
                 <div class="compose-left">
+                    <label for="imageUpload" class="image-upload-btn">
+                        📷 Image
+                    </label>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
                     <div class="char-ring" id="charRing">
                         <svg width="28" height="28" viewBox="0 0 28 28">
                             <circle class="bg" cx="14" cy="14" r="11" />
@@ -462,11 +1360,318 @@ const postBtn = document.getElementById('postBtn');
 const fillCircle = document.querySelector('.char-ring .fill');
 
 let mood = 'none';
-let sort = 'recent';
+let sort = 'new';
 const liked = new Set();
 const reposted = new Set();
 const bookmarked = new Set();
 const reacted = {}; // { postId: Set<type> }
+let selectedImage = null;
+const replyImages = {}; // Store reply images by post ID
+
+// ── Dark Mode Toggle ─────────────────────────────
+
+function toggleDarkMode() {
+    const body = document.body;
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const darkIcon = darkModeToggle.querySelector('.dark-mode-icon');
+    const lightIcon = darkModeToggle.querySelector('.light-mode-icon');
+    
+    body.classList.toggle('dark-mode');
+    
+    if (body.classList.contains('dark-mode')) {
+        darkIcon.style.display = 'none';
+        lightIcon.style.display = 'inline';
+        localStorage.setItem('darkMode', 'enabled');
+    } else {
+        darkIcon.style.display = 'inline';
+        lightIcon.style.display = 'none';
+        localStorage.setItem('darkMode', 'disabled');
+    }
+}
+
+// Check for saved dark mode preference
+function initDarkMode() {
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'enabled') {
+        document.body.classList.add('dark-mode');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        if (darkModeToggle) {
+            darkModeToggle.querySelector('.dark-mode-icon').style.display = 'none';
+            darkModeToggle.querySelector('.light-mode-icon').style.display = 'inline';
+        }
+    }
+}
+
+// Initialize dark mode on page load
+initDarkMode();
+
+// ── Sidebar Functions ───────────────────────────
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    
+    sidebar.classList.toggle('open');
+    
+    if (sidebar.classList.contains('open')) {
+        toggle.innerHTML = '<span>✕</span>';
+    } else {
+        toggle.innerHTML = '<span>☰</span>';
+    }
+}
+
+function editProfile() {
+    // Simulate profile editing
+    const currentName = document.getElementById('profileName').textContent;
+    const newName = prompt('Enter your display name:', currentName);
+    
+    if (newName && newName.trim() && newName !== currentName) {
+        document.getElementById('profileName').textContent = newName.trim();
+        localStorage.setItem('profileName', newName.trim());
+        toast('Profile updated successfully!');
+    }
+}
+
+function changeProfilePicture() {
+    // Create file input for profile picture
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgData = e.target.result;
+                document.getElementById('profilePicImg').src = imgData;
+                localStorage.setItem('profilePicture', imgData);
+                toast('Profile picture updated!');
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
+}
+
+function viewMyPosts() {
+    // Filter to show only user's posts (simulated)
+    const userPosts = []; // This would normally filter by user ID
+    toast('My posts feature coming soon!');
+}
+
+function viewSettings() {
+    toast('Settings panel coming soon!');
+}
+
+function logout() {
+    if (confirm('Are you sure you want to log out?')) {
+        // Clear local storage
+        localStorage.removeItem('profileName');
+        localStorage.removeItem('profilePicture');
+        localStorage.removeItem('darkMode');
+        
+        // Reset profile
+        document.getElementById('profileName').textContent = 'Anonymous User';
+        document.getElementById('profileHandle').textContent = '@anon_user';
+        document.getElementById('profilePicImg').src = 'https://picsum.photos/seed/default/100/100.jpg';
+        
+        // Reset to light mode
+        document.body.classList.remove('dark-mode');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.querySelector('.dark-mode-icon').style.display = 'inline';
+        darkModeToggle.querySelector('.light-mode-icon').style.display = 'none';
+        
+        // Close sidebar
+        toggleSidebar();
+        
+        toast('Logged out successfully!');
+        
+        // In a real app, this would redirect to login page
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
+    }
+}
+
+// Load saved profile data
+function loadProfile() {
+    const savedName = localStorage.getItem('profileName');
+    const savedPicture = localStorage.getItem('profilePicture');
+    
+    if (savedName) {
+        document.getElementById('profileName').textContent = savedName;
+        document.getElementById('profileHandle').textContent = '@' + savedName.toLowerCase().replace(/\s+/g, '_');
+    }
+    
+    if (savedPicture) {
+        document.getElementById('profilePicImg').src = savedPicture;
+    }
+}
+
+// Initialize profile on page load
+loadProfile();
+
+// ── Report Functions ─────────────────────────────
+
+let currentReportType = null;
+let currentReportId = null;
+let selectedReason = null;
+
+function showReportTooltip(type, id, button) {
+    // Hide all other tooltips first
+    document.querySelectorAll('.report-tooltip').forEach(tooltip => {
+        tooltip.classList.remove('show');
+    });
+    
+    // Reset state
+    currentReportType = type;
+    currentReportId = id;
+    selectedReason = null;
+    
+    // Show current tooltip
+    const tooltip = document.getElementById(`report-tooltip-${type}-${id}`);
+    if (tooltip) {
+        tooltip.classList.add('show');
+    }
+}
+
+function hideReportTooltip(button) {
+    const tooltip = button.nextElementSibling;
+    if (tooltip && tooltip.classList.contains('report-tooltip')) {
+        tooltip.classList.remove('show');
+    }
+}
+
+function selectReportReason(type, id, reason) {
+    selectedReason = reason;
+    
+    // Hide the custom section if "Other" is not selected
+    const customSection = document.getElementById(`custom-section-${type}-${id}`);
+    if (reason === 'other') {
+        customSection.style.display = 'block';
+        // Focus on textarea
+        setTimeout(() => {
+            const textarea = document.getElementById(`custom-input-${type}-${id}`);
+            if (textarea) textarea.focus();
+        }, 100);
+    } else {
+        customSection.style.display = 'none';
+        // Submit immediately for predefined reasons
+        submitReport(type, id);
+    }
+}
+
+function cancelReport(type, id) {
+    // Hide the custom section
+    const customSection = document.getElementById(`custom-section-${type}-${id}`);
+    if (customSection) {
+        customSection.style.display = 'none';
+    }
+    
+    // Clear the textarea
+    const textarea = document.getElementById(`custom-input-${type}-${id}`);
+    if (textarea) {
+        textarea.value = '';
+    }
+    
+    // Hide tooltip
+    const tooltip = document.getElementById(`report-tooltip-${type}-${id}`);
+    if (tooltip) {
+        tooltip.classList.remove('show');
+    }
+}
+
+function submitReport(type, id) {
+    let reportReason = selectedReason;
+    let customDescription = '';
+    
+    // If "Other" is selected, get custom description
+    if (selectedReason === 'other') {
+        const textarea = document.getElementById(`custom-input-${type}-${id}`);
+        if (textarea) {
+            customDescription = textarea.value.trim();
+            if (!customDescription) {
+                toast('Please describe the issue before submitting');
+                return;
+            }
+        }
+        reportReason = `Other: ${customDescription}`;
+    }
+    
+    // Hide tooltip
+    const tooltip = document.getElementById(`report-tooltip-${type}-${id}`);
+    if (tooltip) {
+        tooltip.classList.remove('show');
+    }
+    
+    // Log the report (in a real app, this would send to server)
+    console.log(`Report submitted:`, {
+        type: type,
+        id: id,
+        reason: reportReason,
+        timestamp: new Date().toISOString()
+    });
+    
+    // Show confirmation
+    const typeText = type === 'post' ? 'Post' : 'Reply';
+    toast(`${typeText} reported successfully!`);
+    
+    // In a real implementation, you would send this to your backend:
+    // fetch('/api/report', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //         type: type,
+    //         id: id,
+    //         reason: reportReason
+    //     })
+    // });
+    
+    // Reset state
+    currentReportType = null;
+    currentReportId = null;
+    selectedReason = null;
+}
+
+// ── Name Lookup Functions ───────────────────────
+
+function handleNameLookupEnter(event) {
+    if (event.key === 'Enter') {
+        lookupName();
+    }
+}
+
+function lookupName() {
+    const input = document.getElementById('nameLookup');
+    const postId = parseInt(input.value.trim());
+    
+    if (!postId || postId < 1) {
+        toast('Please enter a valid post ID');
+        return;
+    }
+    
+    const name = anonName(postId);
+    const handle = anonHandle(postId);
+    const color = anonColor(postId);
+    const initial = anonInitial(postId);
+    
+    // Create a nice result message
+    const result = `Post #${postId}: ${name} (${handle})`;
+    
+    // Show the result in a toast
+    toast(result);
+    
+    // Optional: Clear the input after lookup
+    input.value = '';
+    
+    // Optional: Log to console for debugging
+    console.log(`Post ID ${postId} lookup:`, {
+        name: name,
+        handle: handle,
+        color: color,
+        initial: initial
+    });
+}
 
 // ── Anonymous identity from post id ───────────────
 
@@ -496,6 +1701,60 @@ const EMOJIS = [
     { type: 'angry', icon: '&#128545;' },
     { type: 'fire',  icon: '&#128293;' }
 ];
+
+// ── Image Handling ─────────────────────────────────
+
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        if (file.size > 5 * 1024 * 1024) {
+            toast('Image size must be less than 5MB');
+            event.target.value = '';
+            return;
+        }
+        
+        selectedImage = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImage').src = e.target.result;
+            document.getElementById('imagePreviewContainer').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeImage() {
+    selectedImage = null;
+    document.getElementById('imagePreviewContainer').style.display = 'none';
+    document.getElementById('previewImage').src = '';
+    document.getElementById('imageUpload').value = '';
+}
+
+function previewReplyImage(postId, event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        if (file.size > 5 * 1024 * 1024) {
+            toast('Image size must be less than 5MB');
+            event.target.value = '';
+            return;
+        }
+        
+        replyImages[postId] = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById(`reply-preview-img-${postId}`).src = e.target.result;
+            document.getElementById(`reply-preview-${postId}`).style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeReplyImage(postId) {
+    delete replyImages[postId];
+    document.getElementById(`reply-preview-${postId}`).style.display = 'none';
+    document.getElementById(`reply-preview-img-${postId}`).src = '';
+    document.getElementById(`reply-image-${postId}`).value = '';
+}
 
 // ── Mood picker ───────────────────────────────────
 
@@ -589,6 +1848,12 @@ async function loadPosts() {
             const moodHtml = p.mood && p.mood !== 'none' && MOOD_MAP[p.mood]
                 ? `<span class="post-mood ${MOOD_MAP[p.mood].cls}">${MOOD_MAP[p.mood].label}</span>` : '';
 
+            const imageHtml = p.image ? `
+                <div class="post-image">
+                    <img src="${p.image}" alt="Post image" loading="lazy">
+                </div>
+            ` : '';
+
             const emojisHtml = EMOJIS.map(e => {
                 const c = (p.reactions && p.reactions[e.type]) || 0;
                 const done = reacted[p.id] && reacted[p.id].has(e.type);
@@ -604,9 +1869,39 @@ async function loadPosts() {
                         <span class="post-handle">${anonHandle(p.id)}</span>
                         <span class="post-dot">&middot;</span>
                         <span class="post-time">${timeAgo(p.timestamp)}</span>
+                        <div class="report-container">
+                            <button class="report-btn" onclick="showReportTooltip('post', ${p.id}, this)" onmouseleave="hideReportTooltip(this)">
+                                <span class="report-icon">🚩</span>
+                            </button>
+                            <div class="report-tooltip" id="report-tooltip-post-${p.id}">
+                                <div class="report-tooltip-content">
+                                    <h4>Report Post</h4>
+                                    <div class="report-options">
+                                        <button onclick="selectReportReason('post', ${p.id}, 'spam')">📧 Spam</button>
+                                        <button onclick="selectReportReason('post', ${p.id}, 'inappropriate')">⚠️ Inappropriate</button>
+                                        <button onclick="selectReportReason('post', ${p.id}, 'harassment')">🛑 Harassment</button>
+                                        <button onclick="selectReportReason('post', ${p.id}, 'misinformation')">❌ Misinformation</button>
+                                        <button onclick="selectReportReason('post', ${p.id}, 'other')">📋 Other</button>
+                                    </div>
+                                    <div class="report-custom-section" id="custom-section-post-${p.id}" style="display: none;">
+                                        <textarea 
+                                            id="custom-input-post-${p.id}" 
+                                            placeholder="Please describe the issue in detail..." 
+                                            maxlength="500"
+                                            rows="3"
+                                        ></textarea>
+                                        <div class="report-actions">
+                                            <button class="report-cancel-btn" onclick="cancelReport('post', ${p.id})">Cancel</button>
+                                            <button class="report-submit-btn" onclick="submitReport('post', ${p.id})">Submit Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     ${moodHtml}
                     <div class="post-text">${esc(p.text)}</div>
+                    ${imageHtml}
                     <div class="post-reactions">${emojisHtml}</div>
                     <div class="actions">
                         <button class="action reply-action" onclick="toggleReplies(${p.id})">
@@ -626,7 +1921,15 @@ async function loadPosts() {
                         <div id="replies-list-${p.id}"></div>
                         <div class="reply-compose">
                             <input type="text" id="reply-input-${p.id}" placeholder="Post your reply" maxlength="280" onkeydown="if(event.key==='Enter')sendReply(${p.id})" />
+                            <label for="reply-image-${p.id}" class="reply-image-btn">📷</label>
+                            <input type="file" id="reply-image-${p.id}" accept="image/*" style="display: none;" onchange="previewReplyImage(${p.id}, event)">
                             <button onclick="sendReply(${p.id})">Reply</button>
+                        </div>
+                        <div class="reply-image-preview-container" id="reply-preview-${p.id}" style="display: none;">
+                            <div class="reply-image-preview">
+                                <img id="reply-preview-img-${p.id}" src="" alt="Reply preview">
+                                <button type="button" class="remove-reply-image-btn" onclick="removeReplyImage(${p.id})">✕</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -642,22 +1945,42 @@ async function loadPosts() {
 async function createPost() {
     const text = input.value.trim();
     if (!text) return;
+    
     postBtn.disabled = true;
+    
+    const formData = new FormData();
+    formData.append('text', text);
+    formData.append('mood', mood);
+    if (selectedImage) {
+        formData.append('image', selectedImage);
+    }
+    
     try {
-        await fetch(API, {
+        const response = await fetch(API, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text, mood })
+            body: formData
         });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to post');
+        }
+        
         input.value = '';
         input.style.height = 'auto';
         fillCircle.style.strokeDashoffset = CIRCUMFERENCE;
         fillCircle.className.baseVal = 'fill';
         mood = 'none';
+        selectedImage = null;
+        removeImage();
         document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('selected'));
         toast('Posted!');
         loadPosts();
-    } catch (e) { toast('Failed to post'); }
+    } catch (e) { 
+        toast(e.message || 'Failed to post'); 
+    } finally {
+        postBtn.disabled = false;
+    }
 }
 
 // ── Like ──────────────────────────────────────────
@@ -748,17 +2071,55 @@ async function fetchReplies(id) {
         if (!replies.length) {
             list.innerHTML = '<div style="padding:10px 0 0 52px;color:#9aa3ad;font-size:0.85em;">No replies yet</div>';
         } else {
-            list.innerHTML = replies.map(r => `
+            list.innerHTML = replies.map(r => {
+                const imageHtml = r.image ? `
+                    <div class="reply-image">
+                        <img src="${r.image}" alt="Reply image" loading="lazy">
+                    </div>
+                ` : '';
+                
+                return `
                 <div class="reply">
                     <div class="reply-avatar">${anonInitial(r.id)}</div>
                     <div class="reply-body">
                         <span class="reply-name">${anonName(r.id)}</span>
                         <span class="reply-handle">${anonHandle(r.id)}</span>
                         <div class="reply-text">${esc(r.text)}</div>
+                        ${imageHtml}
                         <div class="reply-time">${timeAgo(r.timestamp)}</div>
+                        <div class="report-container">
+                            <button class="report-btn reply-report-btn" onclick="showReportTooltip('reply', ${r.id}, this)" onmouseleave="hideReportTooltip(this)">
+                                <span class="report-icon">🚩</span>
+                            </button>
+                            <div class="report-tooltip" id="report-tooltip-reply-${r.id}">
+                                <div class="report-tooltip-content">
+                                    <h4>Report Reply</h4>
+                                    <div class="report-options">
+                                        <button onclick="selectReportReason('reply', ${r.id}, 'spam')">📧 Spam</button>
+                                        <button onclick="selectReportReason('reply', ${r.id}, 'inappropriate')">⚠️ Inappropriate</button>
+                                        <button onclick="selectReportReason('reply', ${r.id}, 'harassment')">🛑 Harassment</button>
+                                        <button onclick="selectReportReason('reply', ${r.id}, 'misinformation')">❌ Misinformation</button>
+                                        <button onclick="selectReportReason('reply', ${r.id}, 'other')">📋 Other</button>
+                                    </div>
+                                    <div class="report-custom-section" id="custom-section-reply-${r.id}" style="display: none;">
+                                        <textarea 
+                                            id="custom-input-reply-${r.id}" 
+                                            placeholder="Please describe the issue in detail..." 
+                                            maxlength="500"
+                                            rows="3"
+                                        ></textarea>
+                                        <div class="report-actions">
+                                            <button class="report-cancel-btn" onclick="cancelReport('reply', ${r.id})">Cancel</button>
+                                            <button class="report-submit-btn" onclick="submitReport('reply', ${r.id})">Submit Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
     } catch (e) { console.error(e); }
 }
@@ -767,13 +2128,26 @@ async function sendReply(id) {
     const inp = document.getElementById(`reply-input-${id}`);
     const text = inp.value.trim();
     if (!text) return;
+    
+    const formData = new FormData();
+    formData.append('text', text);
+    if (replyImages[id]) {
+        formData.append('image', replyImages[id]);
+    }
+    
     try {
-        await fetch(`${API}/${id}/reply`, {
+        const response = await fetch(`${API}/${id}/reply`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
+            body: formData
         });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to reply');
+        }
+        
         inp.value = '';
+        removeReplyImage(id);
         await fetchReplies(id);
         // Update reply count in action bar
         const res = await fetch(`${API}/${id}/replies`);
@@ -782,7 +2156,9 @@ async function sendReply(id) {
         const replyBtn = postEl.querySelector('.reply-action span');
         replyBtn.textContent = fmtCount(replies.length);
         toast('Reply posted!');
-    } catch (e) { toast('Failed to reply'); }
+    } catch (e) { 
+        toast(e.message || 'Failed to reply'); 
+    }
 }
 
 // ── Toast ─────────────────────────────────────────
