@@ -106,7 +106,7 @@
             outline: none;
             transition: all 0.15s;
             font-family: inherit;
-            width: 180px;
+            width: 220px;
         }
 
         #nameLookup:focus {
@@ -116,6 +116,64 @@
 
         #nameLookup::placeholder {
             color: #ff69b4;
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #ff69b4;
+            border-radius: 12px;
+            margin-top: 5px;
+            z-index: 1000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            animation: dropdownSlide 0.2s ease;
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-options {
+            padding: 8px;
+        }
+
+        .search-option {
+            width: 100%;
+            padding: 10px 12px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+            font-size: 0.85em;
+            color: #8b0000;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .search-option:hover {
+            background: rgba(255, 105, 180, 0.15);
+            transform: translateX(2px);
+        }
+
+        .search-option-icon {
+            font-size: 1.1em;
+            width: 20px;
+            text-align: center;
         }
 
         .search-btn {
@@ -132,6 +190,46 @@
 
         .search-btn:hover {
             background: rgba(255, 105, 180, 0.5);
+            border-color: #ff1493;
+        }
+
+        /* Dark Mode Search Styles */
+        body.dark-mode #nameLookup {
+            background: rgba(30, 30, 40, 0.8);
+            color: #ffb6c1;
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode #nameLookup:focus {
+            background: rgba(30, 30, 40, 0.95);
+            border-color: #ff1493;
+        }
+
+        body.dark-mode #nameLookup::placeholder {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .search-dropdown {
+            background: rgba(20, 20, 30, 0.95);
+            border-color: #ff1493;
+        }
+
+        body.dark-mode .search-option {
+            color: #ffb6c1;
+        }
+
+        body.dark-mode .search-option:hover {
+            background: rgba(255, 105, 180, 0.1);
+        }
+
+        body.dark-mode .search-btn {
+            background: rgba(255, 105, 180, 0.2);
+            color: #ffb6c1;
+            border-color: #ff69b4;
+        }
+
+        body.dark-mode .search-btn:hover {
+            background: rgba(255, 105, 180, 0.3);
             border-color: #ff1493;
         }
 
@@ -944,8 +1042,55 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 2px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .post-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 12px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+        }
+
+        .delete-btn {
+            color: #ff1493;
+            opacity: 0.7;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 20, 147, 0.1);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .delete-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Dark Mode Post Actions */
+        body.dark-mode .delete-btn {
+            color: #ff69b4;
+        }
+
+        body.dark-mode .delete-btn:hover {
+            background: rgba(255, 105, 180, 0.15);
+        }
+
         .post-name {
             font-weight: 700;
             font-size: 0.92em;
@@ -1289,8 +1434,20 @@
         <div class="top-bar-inner">
             <h1>Campus Confessions <span class="subtitle" id="count"></span></h1>
             <div class="search-container">
-                <input type="number" id="nameLookup" placeholder="Enter post ID to find name" min="1" onkeypress="handleNameLookupEnter(event)">
+                <input type="text" id="nameLookup" placeholder="Search by post ID or user name..." oninput="handleSearchInput(event)" onkeypress="handleNameLookupEnter(event)">
                 <button onclick="lookupName()" class="search-btn">🔍</button>
+                <div class="search-dropdown" id="searchDropdown" style="display: none;">
+                    <div class="search-options">
+                        <button class="search-option" onclick="setSearchType('id')">
+                            <span class="search-option-icon">🔢</span>
+                            <span>Search by Post ID</span>
+                        </button>
+                        <button class="search-option" onclick="setSearchType('name')">
+                            <span class="search-option-icon">👤</span>
+                            <span>Search by User Name</span>
+                        </button>
+                    </div>
+                </div>
             </div>
             <button class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
                 <span class="dark-mode-icon">🌙</span>
@@ -1633,44 +1790,256 @@ function submitReport(type, id) {
     selectedReason = null;
 }
 
-// ── Name Lookup Functions ───────────────────────
+// ── Enhanced Search Functions ───────────────────
+
+let searchType = 'id'; // 'id' or 'name'
+let searchTimeout = null;
+let allPosts = []; // Store all posts for searching
+
+function handleSearchInput(event) {
+    const input = event.target;
+    const value = input.value.trim();
+    
+    // Clear existing timeout
+    if (searchTimeout) {
+        clearTimeout(searchTimeout);
+    }
+    
+    // Show/hide dropdown based on input
+    const dropdown = document.getElementById('searchDropdown');
+    if (value.length > 0) {
+        dropdown.style.display = 'block';
+        
+        // Debounced search
+        searchTimeout = setTimeout(() => {
+            performSearch(value);
+        }, 300);
+    } else {
+        dropdown.style.display = 'none';
+        // Reset to show all posts
+        displayAllPosts();
+    }
+}
+
+function setSearchType(type) {
+    searchType = type;
+    const input = document.getElementById('nameLookup');
+    const dropdown = document.getElementById('searchDropdown');
+    
+    // Update placeholder
+    if (type === 'id') {
+        input.placeholder = 'Search by post ID...';
+        input.type = 'number';
+        input.min = '1';
+    } else {
+        input.placeholder = 'Search by user name...';
+        input.type = 'text';
+        input.removeAttribute('min');
+    }
+    
+    // Hide dropdown
+    dropdown.style.display = 'none';
+    
+    // Focus input
+    input.focus();
+    
+    // Perform search if there's a value
+    if (input.value.trim()) {
+        performSearch(input.value.trim());
+    }
+}
+
+function performSearch(query) {
+    if (!query) {
+        displayAllPosts();
+        return;
+    }
+    
+    if (searchType === 'id') {
+        searchByPostId(query);
+    } else {
+        searchByUserName(query);
+    }
+}
+
+function searchByPostId(postId) {
+    const id = parseInt(postId);
+    if (isNaN(id) || id < 1) {
+        toast('Please enter a valid post ID');
+        return;
+    }
+    
+    // Find and highlight the specific post
+    const postElement = document.getElementById(`post-${id}`);
+    if (postElement) {
+        // Hide all posts
+        document.querySelectorAll('.post').forEach(post => {
+            post.style.display = 'none';
+        });
+        
+        // Show the searched post
+        postElement.style.display = 'block';
+        postElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Highlight effect
+        postElement.style.border = '2px solid #ff1493';
+        setTimeout(() => {
+            postElement.style.border = '';
+        }, 2000);
+        
+        toast(`Found post #${id}`);
+    } else {
+        toast(`Post #${id} not found`);
+        displayAllPosts();
+    }
+}
+
+function searchByUserName(userName) {
+    if (!userName || userName.length < 2) {
+        toast('Please enter at least 2 characters');
+        return;
+    }
+    
+    const query = userName.toLowerCase();
+    let foundCount = 0;
+    
+    // Filter posts by user name
+    document.querySelectorAll('.post').forEach(post => {
+        const postName = post.querySelector('.post-name');
+        const postHandle = post.querySelector('.post-handle');
+        
+        if (postName && postHandle) {
+            const name = postName.textContent.toLowerCase();
+            const handle = postHandle.textContent.toLowerCase();
+            
+            if (name.includes(query) || handle.includes(query)) {
+                post.style.display = 'block';
+                foundCount++;
+            } else {
+                post.style.display = 'none';
+            }
+        }
+    });
+    
+    if (foundCount > 0) {
+        toast(`Found ${foundCount} post(s) by "${userName}"`);
+        
+        // Scroll to first result
+        const firstVisible = document.querySelector('.post:not([style*="display: none"])');
+        if (firstVisible) {
+            firstVisible.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    } else {
+        toast(`No posts found for "${userName}"`);
+        displayAllPosts();
+    }
+}
+
+function displayAllPosts() {
+    document.querySelectorAll('.post').forEach(post => {
+        post.style.display = 'block';
+    });
+}
 
 function handleNameLookupEnter(event) {
     if (event.key === 'Enter') {
-        lookupName();
+        const input = event.target;
+        const value = input.value.trim();
+        
+        if (value) {
+            performSearch(value);
+        }
     }
 }
 
 function lookupName() {
     const input = document.getElementById('nameLookup');
-    const postId = parseInt(input.value.trim());
+    const value = input.value.trim();
     
-    if (!postId || postId < 1) {
-        toast('Please enter a valid post ID');
+    if (!value) {
+        toast('Please enter a search term');
         return;
     }
     
-    const name = anonName(postId);
-    const handle = anonHandle(postId);
-    const color = anonColor(postId);
-    const initial = anonInitial(postId);
+    performSearch(value);
+}
+
+// Hide dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const searchContainer = document.querySelector('.search-container');
+    const dropdown = document.getElementById('searchDropdown');
     
-    // Create a nice result message
-    const result = `Post #${postId}: ${name} (${handle})`;
+    if (!searchContainer.contains(event.target)) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// ── Delete Post Function ───────────────────────
+
+function deletePost(postId, button) {
+    console.log('Attempting to delete post:', postId);
     
-    // Show the result in a toast
-    toast(result);
+    // Show confirmation dialog
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+        console.log('Delete cancelled by user');
+        return;
+    }
     
-    // Optional: Clear the input after lookup
-    input.value = '';
+    // Disable button during deletion
+    button.disabled = true;
+    button.innerHTML = '<span>⏳</span>';
     
-    // Optional: Log to console for debugging
-    console.log(`Post ID ${postId} lookup:`, {
-        name: name,
-        handle: handle,
-        color: color,
-        initial: initial
+    // Send delete request to server
+    fetch(`/api/posts/${postId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        console.log('Delete response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Delete success:', data);
+        
+        // Remove post from DOM with animation
+        const postElement = document.getElementById(`post-${postId}`);
+        if (postElement) {
+            postElement.style.transition = 'all 0.3s ease';
+            postElement.style.opacity = '0';
+            postElement.style.transform = 'translateX(-100%)';
+            
+            setTimeout(() => {
+                postElement.remove();
+                toast('Post deleted successfully');
+                
+                // Update post count
+                updatePostCount();
+                
+                // Reload posts if no posts left
+                if (document.querySelectorAll('.post').length === 0) {
+                    loadPosts();
+                }
+            }, 300);
+        }
+    })
+    .catch(error => {
+        console.error('Delete error:', error);
+        toast(`Failed to delete post: ${error.message}`);
+        
+        // Restore button
+        button.disabled = false;
+        button.innerHTML = '<span>🗑️</span>';
     });
+}
+
+function updatePostCount() {
+    const count = document.querySelectorAll('.post').length;
+    const countElement = document.getElementById('count');
+    if (countElement) {
+        countElement.textContent = count > 0 ? `(${count})` : '';
+    }
 }
 
 // ── Anonymous identity from post id ───────────────
@@ -1869,30 +2238,35 @@ async function loadPosts() {
                         <span class="post-handle">${anonHandle(p.id)}</span>
                         <span class="post-dot">&middot;</span>
                         <span class="post-time">${timeAgo(p.timestamp)}</span>
-                        <div class="report-container">
-                            <button class="report-btn" onclick="showReportTooltip('post', ${p.id}, this)" onmouseleave="hideReportTooltip(this)">
-                                <span class="report-icon">🚩</span>
+                        <div class="post-actions">
+                            <button class="post-action-btn delete-btn" onclick="deletePost(${p.id}, this)" title="Delete post">
+                                <span>🗑️</span>
                             </button>
-                            <div class="report-tooltip" id="report-tooltip-post-${p.id}">
-                                <div class="report-tooltip-content">
-                                    <h4>Report Post</h4>
-                                    <div class="report-options">
-                                        <button onclick="selectReportReason('post', ${p.id}, 'spam')">📧 Spam</button>
-                                        <button onclick="selectReportReason('post', ${p.id}, 'inappropriate')">⚠️ Inappropriate</button>
-                                        <button onclick="selectReportReason('post', ${p.id}, 'harassment')">🛑 Harassment</button>
-                                        <button onclick="selectReportReason('post', ${p.id}, 'misinformation')">❌ Misinformation</button>
-                                        <button onclick="selectReportReason('post', ${p.id}, 'other')">📋 Other</button>
-                                    </div>
-                                    <div class="report-custom-section" id="custom-section-post-${p.id}" style="display: none;">
-                                        <textarea 
-                                            id="custom-input-post-${p.id}" 
-                                            placeholder="Please describe the issue in detail..." 
-                                            maxlength="500"
-                                            rows="3"
-                                        ></textarea>
-                                        <div class="report-actions">
-                                            <button class="report-cancel-btn" onclick="cancelReport('post', ${p.id})">Cancel</button>
-                                            <button class="report-submit-btn" onclick="submitReport('post', ${p.id})">Submit Report</button>
+                            <div class="report-container">
+                                <button class="report-btn" onclick="showReportTooltip('post', ${p.id}, this)" onmouseleave="hideReportTooltip(this)">
+                                    <span class="report-icon">🚩</span>
+                                </button>
+                                <div class="report-tooltip" id="report-tooltip-post-${p.id}">
+                                    <div class="report-tooltip-content">
+                                        <h4>Report Post</h4>
+                                        <div class="report-options">
+                                            <button onclick="selectReportReason('post', ${p.id}, 'spam')">📧 Spam</button>
+                                            <button onclick="selectReportReason('post', ${p.id}, 'inappropriate')">⚠️ Inappropriate</button>
+                                            <button onclick="selectReportReason('post', ${p.id}, 'harassment')">🛑 Harassment</button>
+                                            <button onclick="selectReportReason('post', ${p.id}, 'misinformation')">❌ Misinformation</button>
+                                            <button onclick="selectReportReason('post', ${p.id}, 'other')">📋 Other</button>
+                                        </div>
+                                        <div class="report-custom-section" id="custom-section-post-${p.id}" style="display: none;">
+                                            <textarea 
+                                                id="custom-input-post-${p.id}" 
+                                                placeholder="Please describe the issue in detail..." 
+                                                maxlength="500"
+                                                rows="3"
+                                            ></textarea>
+                                            <div class="report-actions">
+                                                <button class="report-cancel-btn" onclick="cancelReport('post', ${p.id})">Cancel</button>
+                                                <button class="report-submit-btn" onclick="submitReport('post', ${p.id})">Submit Report</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

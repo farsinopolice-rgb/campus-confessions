@@ -261,6 +261,57 @@ app.post('/api/posts/:id/react', (req, res) => {
     });
 });
 
+// Delete post
+app.delete('/api/posts/:id', (req, res) => {
+    const postId = req.params.id;
+    console.log(`Delete request received for post ID: ${postId}`);
+    
+    // Validate postId
+    if (!postId || isNaN(parseInt(postId))) {
+        console.error('Invalid post ID:', postId);
+        return res.status(400).json({ error: 'Invalid post ID' });
+    }
+    
+    // Delete associated replies first
+    db.run(`DELETE FROM replies WHERE post_id = ?`, [postId], (err) => {
+        if (err) {
+            console.error('Error deleting replies:', err.message);
+            return res.status(500).json({ error: 'Failed to delete replies' });
+        }
+        console.log('Deleted replies for post:', postId);
+        
+        // Delete associated reactions
+        db.run(`DELETE FROM reactions WHERE post_id = ?`, [postId], (err) => {
+            if (err) {
+                console.error('Error deleting reactions:', err.message);
+                return res.status(500).json({ error: 'Failed to delete reactions' });
+            }
+            console.log('Deleted reactions for post:', postId);
+            
+            // Delete the post
+            db.run(`DELETE FROM posts WHERE id = ?`, [postId], function(err) {
+                if (err) {
+                    console.error('Error deleting post:', err.message);
+                    return res.status(500).json({ error: 'Failed to delete post' });
+                }
+                
+                console.log(`Post deletion result: ${this.changes} rows affected`);
+                
+                if (this.changes === 0) {
+                    console.log('Post not found:', postId);
+                    return res.status(404).json({ error: 'Post not found' });
+                }
+                
+                console.log('Post deleted successfully:', postId);
+                res.json({ 
+                    message: 'Post deleted successfully',
+                    deletedId: postId
+                });
+            });
+        });
+    });
+});
+
 // Get replies
 app.get('/api/posts/:id/replies', (req, res) => {
     db.all(`SELECT * FROM replies WHERE post_id = ? ORDER BY timestamp ASC`, [req.params.id], (err, rows) => {
